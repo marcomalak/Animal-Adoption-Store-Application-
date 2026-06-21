@@ -13,16 +13,22 @@ int main() {
         cout << "\n--- Animal Adoption Store ---\n";
         cout << "1. Register a new user\n";
         cout << "2. login\n";
-        cout << "your choice :";cin >> choice;
+        cout << "your choice :";
+        if (!(cin >> choice)) {
+            cout << "Invalid input! Please enter a number (1 or 2).\n";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            continue;
+        }
 
         if (choice == 1) {
-            string fname, lname, pass, phone;
+            string fname, lname, pass, phone,email;
             cout << "Enter first name: "; cin >> fname;
             cout << "Enter last name: "; cin >> lname;
             cout << "Enter password: "; cin >> pass;
             cout << "Enter phone number: "; cin >> phone;
-
-            if (db.registerUser(fname, lname, pass, phone)) {
+            cout << "Enter Email: "; cin >> email;
+            if (db.registerUser(fname, lname, pass, phone,email)) {
                 cout << "Registration successful!\n";
             }
             else {
@@ -31,14 +37,14 @@ int main() {
         }
         else if (choice == 2) {
             
-            string fname, pass;
-            cout << "Enter first name: "; cin >> fname;
+            string email, pass;
+            cout << "Enter Email: "; cin >> email;
             cout << "Enter password: "; cin >> pass;
 
-            id = db.loginUser(fname, pass);
+            id = db.loginUser(email, pass);
             if (id != -1) {
                 cout << "login successful!\n";
-                
+                cout << "welcome, "+db.getUserName(id) + " !\n";
                 break;
             }
             else {
@@ -59,10 +65,11 @@ int main() {
 
          if (choice == 1) {
             string name, health, type;
-            int age;
-            cout << "Enter animal name: ";   cin >> name;
+            float age;
+            cin.ignore();
+            cout << "Enter animal name: ";   getline(cin, name);
             cout << "Enter age: ";           cin >> age;
-            cout << "Enter health status: "; cin >> health;
+            cout << "Enter health status: ";cin.ignore(); getline(cin, health);
             cout << "Enter type : ";         cin >> type;
 
             if (db.addAnimal(name, age, health, type)) {
